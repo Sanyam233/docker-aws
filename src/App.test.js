@@ -21,6 +21,6 @@ test('renders learn react changed', () => {
 
 test('renders learn react changed', () => {
   render(<App />);
-  const linkElement = screen.getByText(/ppp/i);
+  const linkElement = screen.getByText(/learn react/i);
   expect(linkElement).toBeInTheDocument();
 });
