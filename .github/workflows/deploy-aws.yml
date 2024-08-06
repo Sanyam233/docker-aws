@@ -22,3 +22,37 @@ jobs:
       
       - name: Run tests
         run: npm run test
+  
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Login to Docker
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t sanyamgupta/docker-prod-demo -f Dockerfile.dev .
+      
+      - name: Run tests in Docker
+        run: docker run -e CI=true sanyamgupta/docker-prod-demo npm test        
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: docker-aws-demo
+          environment_name: Docker-aws-demo-env
+          version_label: ${{ github.sha }}
+          existing_bucket_name: elasticbeanstalk-us-east-1-024848469382
+          region: us-east-1
+          deployment_package: deploy.zip
+
+      - name: Deployed!
+        run: echo App deployed to ELB
