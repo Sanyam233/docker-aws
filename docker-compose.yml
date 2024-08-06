@@ -1,19 +1,8 @@
-version: '3'
+version : '3'
 services:
   react-app:
-    build:
-      context: . #where do we want to look for our project files
-      dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - /app/node_modules
-      - .:/app #map the current working directory to the app folder inside the container
-  tests:
     build: 
       context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      - /app/node_modules
-      - .:/app
-    command: ["npm", "run", "test"]
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
