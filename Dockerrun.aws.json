@@ -1,7 +1,7 @@
 {
     "AWSEBDockerrunVersion": "1",
     "Image": {
-      "Name": "sanyamgupta23/docker-prod-aws",
+      "Name": "sanyamgupta23/docker-prod-aw",
       "Update": "true"
     },
     "Ports": [
