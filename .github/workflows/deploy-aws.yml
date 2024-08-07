@@ -45,7 +45,8 @@ jobs:
       - name: Push prod Docker image
         run: docker push sanyamgupta23/docker-prod-aws
 
-      - name: Generate deployment package
+        #Dockerrun.aws.json contains container config that aws needs to pull the image and run the container
+      - name: Generate deployment package with Dockerrun.aws.json
         run: zip -r deploy.zip Dockerrun.aws.json -x '*.git*'
 
       - name: Deploy to EB
