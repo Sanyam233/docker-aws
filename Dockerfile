@@ -12,5 +12,6 @@ RUN npm run build
 
 #STAGE Runner
 FROM nginx
-EXPOSE 80
 COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

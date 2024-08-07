@@ -33,14 +33,37 @@ jobs:
       - name: Login to Docker
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
-        run: docker build -t sanyamgupta/docker-prod-demo .
+      - name: Build test Docker image
+        run: docker build -t sanyamgupta/docker-test-demo -f Dockerfile.dev .
       
       - name: Run tests in Docker
-        run: docker run -e CI=true sanyamgupta/docker-prod-demo npm test        
+        run: docker run -e CI=true sanyamgupta/docker-test-demo npm test        
+
+      - name: Build prod Docker image
+        run: docker build -t sanyamgupta23/docker-prod-aws .
+      
+      - name: Push prod Docker image
+        run: docker push sanyamgupta23/docker-prod-aws
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Add Dockerrun.aws.json to deployment package
+        run: |
+          echo '{
+            "AWSEBDockerrunVersion": "1",
+            "Image": {
+              "Name": "sanyamgupta/docker-prod-demo",
+              "Update": "true"
+            },
+            "Ports": [
+              {
+                "ContainerPort": 80,
+                "HostPort": 80
+              }
+            ]
+          }' > Dockerrun.aws.json
+          zip -r deploy.zip Dockerrun.aws.json
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
