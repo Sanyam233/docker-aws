@@ -46,24 +46,7 @@ jobs:
         run: docker push sanyamgupta23/docker-prod-aws
 
       - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
-
-      - name: Add Dockerrun.aws.json to deployment package
-        run: |
-          echo '{
-            "AWSEBDockerrunVersion": "1",
-            "Image": {
-              "Name": "sanyamgupta/docker-prod-demo",
-              "Update": "true"
-            },
-            "Ports": [
-              {
-                "ContainerPort": 80,
-                "HostPort": 80
-              }
-            ]
-          }' > Dockerrun.aws.json
-          zip -r deploy.zip Dockerrun.aws.json
+        run: zip -r deploy.zip Dockerrun.aws.json -x '*.git*'
 
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
