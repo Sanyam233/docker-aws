@@ -34,7 +34,7 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t sanyamgupta/docker-prod-demo -f .
+        run: docker build -t sanyamgupta/docker-prod-demo .
       
       - name: Run tests in Docker
         run: docker run -e CI=true sanyamgupta/docker-prod-demo npm test        
